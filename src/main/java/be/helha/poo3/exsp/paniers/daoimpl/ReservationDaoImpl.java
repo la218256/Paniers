@@ -1,6 +1,8 @@
 package be.helha.poo3.exsp.paniers.daoimpl;
 
+import be.helha.poo3.exsp.paniers.dao.ClientDao;
 import be.helha.poo3.exsp.paniers.dao.ReservationDao;
+import be.helha.poo3.exsp.paniers.modeles.Client;
 import be.helha.poo3.exsp.paniers.modeles.Reservation;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -12,6 +14,8 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.LocalDate;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
@@ -100,5 +104,42 @@ public class ReservationDaoImpl implements ReservationDao {
             cloturer(rs, ps, con);
         }
         return ajoutReussi;
+    }
+
+    // Récupère une réservation spécifique par son ID
+    @Override
+    public Reservation getReservation(int id) {
+        Reservation reservation = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = this.daoFactory.getConnexion();
+            ps = con.prepareStatement(GET);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                // Récupération du client associé à la réservation
+                Client client = daoFactory.getDaoImpl(ClientDao.class).getClient(rs.getInt("client_id"));
+
+                // Conversion de la date de commande en LocalDate
+                String dateStr = rs.getString("date_commande");
+                LocalDate dateCommande = LocalDate.parse(dateStr);
+
+                // Création de l'objet Reservation
+                reservation = new Reservation(
+                        dateCommande,
+                        rs.getInt("quantite"),
+                        rs.getInt("prix"),
+                        client
+                );
+                reservation.setId(rs.getInt("id"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cloturer(rs, ps, con);
+        }
+        return reservation;
     }
 }
