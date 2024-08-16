@@ -90,9 +90,9 @@ public class DaoFactory implements Dao {
             return (T) new ClientDaoImpl();
         }
         // Vérifie si le DAO demandé est ReservationDao et retourne une nouvelle instance si nécessaire
-        else if (interfaceDao == ReservationDao.class) {
-            return (T) new ReservationDaoImpl();
-        }
+    //    else if (interfaceDao == ReservationDao.class) {
+      //      return (T) new ReservationDaoImpl();
+       // }
         // Retourne une instance du DAO en utilisant la persistance
         return (T) this.persistance.getDaoImpl(interfaceDao);
     }
