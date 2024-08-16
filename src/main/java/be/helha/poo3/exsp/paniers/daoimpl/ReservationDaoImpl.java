@@ -3,6 +3,10 @@ package be.helha.poo3.exsp.paniers.daoimpl;
 import be.helha.poo3.exsp.paniers.dao.ReservationDao;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
     // Requêtes SQL utilisées dans les méthodes
@@ -20,4 +24,25 @@ public class ReservationDaoImpl implements ReservationDao {
         this.daoFactory = DaoFactory.getInstance();
     }
 
+    // Méthode utilitaire pour fermer les ressources de la base de données
+    private void cloturer(ResultSet rs, PreparedStatement ps, Connection con) {
+        try {
+            if (rs != null)
+                rs.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            if (ps != null)
+                ps.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            if (con != null)
+                con.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }
