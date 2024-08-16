@@ -139,6 +139,31 @@ public class ClientDaoImpl implements ClientDao {
         return liste;
     }
 
+    // Méthode pour supprimer un client par son ID
+    @Override
+    public boolean supprimerClient(int id) {
+        boolean suppressionReussie = false;
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            // Obtention de la connexion à la base de données
+            con = this.daoFactory.getConnexion();
+            // Préparation de la requête SQL de suppression
+            ps = con.prepareStatement(SUPPRIMER);
+            ps.setInt(1, id);
+            // Exécution de la requête
+            int nb = ps.executeUpdate();
+            if (nb == 1)
+                suppressionReussie = true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            // Fermeture des ressources
+            cloturer(null, ps, con);
+        }
+        return suppressionReussie;
+    }
+
 }
 
 
