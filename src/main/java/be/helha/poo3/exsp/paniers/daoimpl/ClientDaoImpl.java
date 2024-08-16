@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import
+
+import be.helha.poo3.exsp.paniers.dao.ClientDao;
 import be.helha.poo3.exsp.paniers.modeles.Client;
 
-public class ClientDaoImpl {
+public class ClientDaoImpl implements ClientDao {
 
         // Requêtes SQL utilisées dans les méthodes
         private static final String GET = "SELECT * FROM clients WHERE id = ?";
@@ -76,6 +77,32 @@ public class ClientDaoImpl {
             cloturer(rs, ps, con);
         }
         return ajoutReussi;
+    }
+
+    public Client getClient(int id) {
+        Client client = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            // Obtention de la connexion à la base de données
+            con = this.daoFactory.getConnexion();
+            // Préparation de la requête SQL de sélection
+            ps = con.prepareStatement(GET);
+            ps.setInt(1, id);
+            // Exécution de la requête
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                client = new Client(rs.getString("prenom"), rs.getString("nom"), rs.getString("commune"));
+                client.setId(rs.getInt("id"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            // Fermeture des ressources
+            cloturer(rs, ps, con);
+        }
+        return client;
     }
     }
 
