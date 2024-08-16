@@ -76,6 +76,26 @@ public class DaoFactory implements Dao {
         }
         return connexion;
     }
+
+    /**
+     * Méthode générique pour retourner n'importe quel type de DAO implémenté.
+     *
+     * @param interfaceDao L'interface du DAO demandé.
+     * @param <T> Le type de DAO à retourner.
+     * @return Une instance du DAO demandé.
+     */
+    public <T extends Dao> T getDaoImpl(Class<T> interfaceDao) {
+        // Vérifie si le DAO demandé est ClientDao et retourne une nouvelle instance si nécessaire
+        if (interfaceDao == ClientDao.class) {
+            return (T) new ClientDaoImpl();
+        }
+        // Vérifie si le DAO demandé est ReservationDao et retourne une nouvelle instance si nécessaire
+        else if (interfaceDao == ReservationDao.class) {
+            return (T) new ReservationDaoImpl();
+        }
+        // Retourne une instance du DAO en utilisant la persistance
+        return (T) this.persistance.getDaoImpl(interfaceDao);
+    }
 }
 
 
