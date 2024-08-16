@@ -1,10 +1,12 @@
 package be.helha.poo3.exsp.paniers.daoimpl;
 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
+import java.util.ArrayList;
+import java.util.List;
 import be.helha.poo3.exsp.paniers.dao.ClientDao;
 import be.helha.poo3.exsp.paniers.modeles.Client;
 
@@ -104,6 +106,39 @@ public class ClientDaoImpl implements ClientDao {
         }
         return client;
     }
+
+    // Méthode pour lister tous les clients
+    @Override
+    public List<Client> listerClients() {
+        List<Client> liste = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            // Obtention de la connexion à la base de données
+            con = this.daoFactory.getConnexion();
+            // Préparation de la requête SQL de sélection
+            ps = con.prepareStatement(LISTER);
+            // Exécution de la requête
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String prenom = rs.getString("prenom");
+                String nom = rs.getString("nom");
+                String commune = rs.getString("commune");
+                Client client = new Client(prenom, nom, commune);
+                client.setId(id);
+                liste.add(client);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            // Fermeture des ressources
+            cloturer(rs, ps, con);
+        }
+        return liste;
     }
+
+}
 
 
