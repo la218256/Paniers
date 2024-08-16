@@ -1,5 +1,9 @@
 package be.helha.poo3.exsp.paniers.daoimpl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 public class ClientDaoImpl {
 
         // Requêtes SQL utilisées dans les méthodes
@@ -15,6 +19,28 @@ public class ClientDaoImpl {
         public ClientDaoImpl() {
             this.daoFactory = DaoFactory.getInstance();
         }
+
+    // Méthode utilitaire pour fermer les ressources JDBC (ResultSet, PreparedStatement, Connection)
+    private void cloturer(ResultSet rs, PreparedStatement ps, Connection con) {
+        try {
+            if (rs != null)
+                rs.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            if (ps != null)
+                ps.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            if (con != null)
+                con.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     }
 
 
