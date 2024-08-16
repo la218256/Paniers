@@ -16,6 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
@@ -141,5 +143,43 @@ public class ReservationDaoImpl implements ReservationDao {
             cloturer(rs, ps, con);
         }
         return reservation;
+    }
+
+    // Récupère la liste de toutes les réservations
+    @Override
+    public List<Reservation> listerReservation() {
+        List<Reservation> liste = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = this.daoFactory.getConnexion();
+            ps = con.prepareStatement(LISTER);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+
+                // Conversion de la date de commande en LocalDate
+                String dateStr = rs.getString("date_commande");
+                LocalDate dateCommande = LocalDate.parse(dateStr);
+
+                int quantite = rs.getInt("quantite");
+                int prix = rs.getInt("prix");
+
+                // Récupération du client associé à la réservation
+                int clientId = rs.getInt("client_id");
+                Client client = daoFactory.getDaoImpl(ClientDao.class).getClient(clientId);
+
+                // Création de l'objet Reservation
+                Reservation reservation = new Reservation(dateCommande, quantite, prix, client);
+                reservation.setId(id);
+                liste.add(reservation);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cloturer(rs, ps, con);
+        }
+        return liste;
     }
 }
