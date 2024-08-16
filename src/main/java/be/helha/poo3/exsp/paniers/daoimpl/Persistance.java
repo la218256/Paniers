@@ -55,5 +55,13 @@ public class Persistance implements Dao {
         return null;
     }
 
+    /**
+     * Retourne l'URL de la base de données ou de la source de persistance.
+     *
+     * @return L'URL de la source de persistance.
+     */
+    public String getUrl() {
+        return url;
+    }
 
 }
