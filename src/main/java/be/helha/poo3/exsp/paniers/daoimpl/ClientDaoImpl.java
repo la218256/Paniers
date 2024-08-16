@@ -164,6 +164,35 @@ public class ClientDaoImpl implements ClientDao {
         return suppressionReussie;
     }
 
+
+    // Méthode pour mettre à jour les informations d'un client
+    @Override
+    public boolean modifierClient(Client client) {
+        boolean modificationReussie = false;
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            // Obtention de la connexion à la base de données
+            con = this.daoFactory.getConnexion();
+            // Préparation de la requête SQL de mise à jour
+            ps = con.prepareStatement(MAJ);
+            ps.setString(1, client.getPrenom().trim());
+            ps.setString(2, client.getNom().trim());
+            ps.setString(3, client.getCommune().trim());
+            ps.setInt(4, client.getId());
+            // Exécution de la requête
+            int resultat = ps.executeUpdate();
+            if (resultat == 1) {
+                modificationReussie = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            // Fermeture des ressources
+            cloturer(null, ps, con);
+        }
+        return modificationReussie;
+    }
 }
 
 
