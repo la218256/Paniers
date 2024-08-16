@@ -33,6 +33,16 @@ public class DaoFactory implements Dao {
     public static DaoFactory getInstance() {
         return INSTANCE;
     }
+
+    // Constructeur privé pour empêcher l'instantiation externe (Singleton)
+    private DaoFactory() {
+        try {
+            // Charge la configuration à partir du fichier spécifié
+            this.persistance = ParserConfig.lireConfiguration(FICHIER_CONFIGURATION);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 
