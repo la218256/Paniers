@@ -25,4 +25,14 @@ public class DaoFactory implements Dao {
     private Persistance persistance;
 
 
+    /**
+     * Retourne l'unique instance de DaoFactory (Singleton).
+     *
+     * @return L'instance unique de DaoFactory.
+     */
+    public static DaoFactory getInstance() {
+        return INSTANCE;
+    }
 }
+
+
