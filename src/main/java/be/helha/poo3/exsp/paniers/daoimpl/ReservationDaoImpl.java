@@ -182,4 +182,25 @@ public class ReservationDaoImpl implements ReservationDao {
         }
         return liste;
     }
+
+    // Supprime une réservation par son ID
+    @Override
+    public boolean supprimerReservation(int id) {
+        boolean suppressionReussie = false;
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = this.daoFactory.getConnexion();
+            ps = con.prepareStatement(SUPPRIMER);
+            ps.setInt(1, id);
+            int nb = ps.executeUpdate();
+            if (nb == 1)
+                suppressionReussie = true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cloturer(null, ps, con);
+        }
+        return suppressionReussie;
+    }
 }
