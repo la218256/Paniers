@@ -203,4 +203,34 @@ public class ReservationDaoImpl implements ReservationDao {
         }
         return suppressionReussie;
     }
+
+    // Modifie une réservation existante
+    @Override
+    public boolean modifierReservation(Reservation reservation) {
+        boolean modificationReussie = false;
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            // Calcul du nouveau prix total en fonction de la quantité et du prix unitaire
+            int prixPanier = lirePrixPanierDepuisJson();
+            int prixTotal = reservation.getQuantite() * prixPanier;
+
+            con = this.daoFactory.getConnexion();
+            ps = con.prepareStatement(MAJ);
+            ps.setString(1, reservation.getDateCommande().toString());
+            ps.setInt(2, reservation.getQuantite());
+            ps.setInt(3, prixTotal);
+            ps.setInt(4, reservation.getClient().getId());
+            ps.setInt(5, reservation.getId());
+            int resultat = ps.executeUpdate();
+            if (resultat == 1) {
+                modificationReussie = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cloturer(null, ps, con);
+        }
+        return modificationReussie;
+    }
 }
