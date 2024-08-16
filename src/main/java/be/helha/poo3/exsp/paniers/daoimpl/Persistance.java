@@ -64,4 +64,13 @@ public class Persistance implements Dao {
         return url;
     }
 
+    /**
+     * Retourne le nombre de DAO disponibles dans la collection.
+     *
+     * @return Le nombre de DAO enregistrés.
+     */
+    public int getNbDaos() {
+        return this.daos.size();
+    }
+
 }
