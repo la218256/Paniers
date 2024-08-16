@@ -4,6 +4,10 @@ import be.helha.poo3.exsp.paniers.dao.ClientDao;
 import be.helha.poo3.exsp.paniers.dao.Dao;
 import be.helha.poo3.exsp.paniers.dao.ReservationDao;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 /**
  * DaoFactory est une classe singleton qui fournit des instances de différents DAOs (Data Access Objects)
  * pour accéder aux données de la base de données. Elle gère également la connexion à la base de données.
@@ -54,6 +58,23 @@ public class DaoFactory implements Dao {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Retourne une connexion à la base de données en utilisant l'URL définie dans la configuration.
+     *
+     * @return Une connexion à la base de données.
+     * @throws SQLException Si une erreur survient lors de la connexion.
+     */
+    public Connection getConnexion() throws SQLException {
+        Connection connexion = null;
+        try {
+            // Crée une connexion à la base de données en utilisant l'URL de persistance
+            connexion = DriverManager.getConnection(persistance.getUrl());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return connexion;
     }
 }
 
