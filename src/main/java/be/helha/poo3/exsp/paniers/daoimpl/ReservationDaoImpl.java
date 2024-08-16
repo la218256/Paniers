@@ -1,8 +1,12 @@
 package be.helha.poo3.exsp.paniers.daoimpl;
 
 import be.helha.poo3.exsp.paniers.dao.ReservationDao;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.springframework.stereotype.Repository;
 
+import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,5 +48,17 @@ public class ReservationDaoImpl implements ReservationDao {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    // Méthode pour lire le prix du panier à partir d'un fichier JSON
+    private int lirePrixPanierDepuisJson() {
+        int prixPanier = 0;
+        try (FileReader reader = new FileReader("src/main/resources/prix.json", StandardCharsets.UTF_8)) {
+            JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+            prixPanier = jsonObject.get("prix_panier").getAsInt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return prixPanier;
     }
 }
