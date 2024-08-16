@@ -1,9 +1,11 @@
 package be.helha.poo3.exsp.paniers.daoimpl;
 
 import be.helha.poo3.exsp.paniers.dao.ReservationDao;
+import be.helha.poo3.exsp.paniers.modeles.Reservation;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.stereotype.Repository;
+
 
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
@@ -60,5 +62,43 @@ public class ReservationDaoImpl implements ReservationDao {
             e.printStackTrace();
         }
         return prixPanier;
+    }
+
+    // Ajoute une nouvelle réservation dans la base de données
+    @Override
+    public boolean ajouterReservation(Reservation reservation) {
+        boolean ajoutReussi = false;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            // Calcul du prix total de la réservation
+            int prixPanier = lirePrixPanierDepuisJson();
+            int prixTotal = reservation.getQuantite() * prixPanier;
+
+            // Insertion de la réservation dans la base de données
+            con = this.daoFactory.getConnexion();
+            ps = con.prepareStatement(AJOUT, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, reservation.getDateCommande().toString());
+            ps.setInt(2, reservation.getQuantite());
+            ps.setInt(3, prixTotal);
+            ps.setInt(4, reservation.getClient().getId());
+
+            int resultat = ps.executeUpdate();
+            if (resultat == 1) {
+                rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    reservation.setId(rs.getInt(1)); // Récupère l'ID généré
+                    ajoutReussi = true;
+                }
+            } else {
+                System.out.println("L'ajout a échoué, resultat = " + resultat);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            cloturer(rs, ps, con);
+        }
+        return ajoutReussi;
     }
 }
