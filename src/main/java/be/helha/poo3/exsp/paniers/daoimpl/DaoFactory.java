@@ -43,6 +43,18 @@ public class DaoFactory implements Dao {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Permet de charger une configuration spécifique pour les tests.
+     */
+    public void setTestConfiguration() {
+        try {
+            // Charge la configuration des tests
+            this.persistance = ParserConfig.lireConfiguration(FICHIER_CONFIGURATION_TESTS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 
