@@ -39,4 +39,26 @@ public class ParserConfig {
 
         // Retourne l'objet Persistance
         return persistance;
-    }}
+    }
+    /**
+     * Valide les configurations de l'objet Persistance.
+     *
+     * @param persistance L'objet Persistance à valider.
+     * @throws Exception Si des champs obligatoires sont manquants dans la configuration.
+     */
+    private static void validation(Persistance persistance) throws Exception {
+        // Vérifie si des DAO sont présents dans la configuration
+        if (persistance.getNbDaos() == 0) {
+            throw new Exception("Il manque le champ <dao>");
+        }
+
+        // Vérifie si l'URL de persistance est présente
+        if (persistance.getUrl() == null) {
+            throw new Exception("Il manque le champ <url>");
+        }
+    }
+
+}
+
+
+
