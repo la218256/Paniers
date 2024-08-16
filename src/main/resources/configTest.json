@@ -1,0 +1,5 @@
+{
+  "type" : "DB",
+  "daos" : ["com.example.panierbis.ClientDaoImpl"],
+  "url"  : "jdbc:sqlite:C:\\sqlite\\db\\paniersTest.db"
+}
